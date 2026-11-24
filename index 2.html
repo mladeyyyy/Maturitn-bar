@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Maturitní bar – postavičky v6</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark;--wood:#4a2a14;--wood2:#2e1809;--gold:#e8b04a;--txt:#f5e9d3}
+*{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;font-family:Georgia,"Times New Roman",serif;color:var(--txt);background:radial-gradient(ellipse at 50% 0,#5a2d3d 0,#2a1220 45%,#120810 100%) fixed;min-height:100vh;overflow-x:hidden}
+header{text-align:center;padding:12px 12px 0}
+h1{margin:0;font-size:1.4rem;color:var(--gold);letter-spacing:.06em;text-shadow:0 0 14px rgba(232,176,74,.6)}
+.sub{font-size:.78rem;opacity:.75}
+.teams{display:flex;gap:10px;max-width:440px;margin:10px auto 0;padding:0 12px}
+.team{flex:1;border:2px solid #fff3;border-radius:14px;padding:6px;text-align:center;background:#0006;transition:.2s;min-width:0}
+.team.a{--c:#3aa0e8}.team.b{--c:#e8553a}
+.team.on{border-color:var(--c);box-shadow:0 0 16px var(--c);background:#000a}
+.av{background:none;border:0;font-size:2.2rem;line-height:1;cursor:pointer;padding:0;display:block;margin:0 auto}
+.nm{color:var(--c);font:bold .95rem Georgia,serif;padding:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ni{width:100%;border:2px solid var(--c);border-radius:10px;padding:6px;font:bold 1rem Georgia,serif;text-align:center;color:#2a1220;background:#fff;margin-top:4px}.bars{display:grid;gap:6px;margin:6px 0 12px}.bars button{text-align:left;padding:9px 12px;border-radius:12px;border:3px solid transparent;background:#fff;font:inherit;font-weight:bold;color:#2a1220;cursor:pointer}.bars button.sel{border-color:#e8b04a;background:#fff3d6}.team input{width:100%;background:none;border:0;border-bottom:1px dashed #fff4;color:var(--c);font:bold .95rem Georgia,serif;text-align:center;padding:2px}
+.sc{font-size:1.6rem;font-weight:bold;line-height:1.1}
+.st{font-size:.62rem;opacity:.8;height:.8rem}
+.tr{display:flex;flex-wrap:wrap;justify-content:center;gap:1px;min-height:26px;margin-top:2px}
+.tr svg{width:18px;height:24px}
+.barman{display:flex;align-items:flex-end;justify-content:center;gap:8px;max-width:440px;margin:4px auto 0;padding:0 12px}
+.barman svg{width:82px;flex:none}
+.bubble{position:relative;background:#f5e9d3;color:#2a1220;padding:8px 12px;border-radius:14px;font-size:.88rem;margin-bottom:32px;max-width:260px;line-height:1.3}
+.bubble:before{content:"";position:absolute;left:-9px;bottom:14px;border:9px solid transparent;border-right-color:#f5e9d3;border-left:0}
+.counter{margin-top:-8px;background:linear-gradient(#6b3d1e,var(--wood) 30%,var(--wood2));border-top:6px solid #8a5a30;box-shadow:0 -6px 18px #000a;padding:14px 8px 30px}
+.grid{max-width:460px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:10px 4px}
+.drink{background:none;border:0;color:var(--txt);font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;padding:2px;-webkit-tap-highlight-color:transparent;transition:transform .15s}
+.drink:active{transform:scale(.92)}
+.drink svg{width:100%;max-width:72px;height:auto;filter:drop-shadow(0 6px 4px #0009)}
+.drink span{font-size:.62rem;margin-top:2px;opacity:.85;line-height:1.1;text-align:center}
+.drink.used{visibility:hidden;pointer-events:none}
+.foot{text-align:center;margin-top:16px;font-size:.85rem}
+.btn{background:var(--gold);color:#2a1220;border:0;border-radius:999px;padding:11px 18px;font:inherit;font-weight:bold;cursor:pointer}
+.btn.ghost{background:none;color:var(--gold);border:1px solid var(--gold)}
+.ov{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;padding:16px;z-index:20;overflow-y:auto}
+.ov.on{display:flex}
+.coaster{margin:auto;background:#f5e9d3;color:#2a1220;border-radius:20px;padding:18px;max-width:400px;width:100%;text-align:center;box-shadow:0 0 0 5px var(--gold),0 20px 50px #000;animation:pop .35s ease-out}
+.coaster small{display:block;letter-spacing:.15em;text-transform:uppercase;color:#8a5a30;font-size:.68rem}
+.coaster .dn{font-size:1.05rem;font-weight:bold;margin:2px 0 6px}
+.coaster .q{font-size:1.25rem;line-height:1.35;font-weight:bold;margin:8px 0 14px}
+.coaster .gl{width:50px;margin:0 auto}
+.roles{display:flex;gap:8px;margin:10px 0 12px}
+.role{flex:1;border-radius:10px;padding:6px;font-size:.78rem;color:#fff}
+.role b{display:block;font-size:.95rem}
+.judge{display:flex;gap:10px}
+.judge .btn{flex:1;color:#fff;font-size:1rem}
+.ok{background:#2e9e4f}.no{background:#c2303a}
+.pk{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin:6px 0 10px}
+.pk button{font-size:1.45rem;background:#fff;border:3px solid transparent;border-radius:12px;padding:4px 0;cursor:pointer}
+.pk button.sel{border-color:var(--c)}
+.pk button.tk{opacity:.3}
+.fly{position:fixed;left:50%;top:38%;width:90px;z-index:30;pointer-events:none;transform:translate(-50%,-50%) scale(1.6)}
+.shard{position:fixed;width:16px;height:16px;z-index:30;pointer-events:none;border:2px solid #fff;clip-path:polygon(0 0,100% 30%,40% 100%)}
+.boom{position:fixed;left:50%;top:38%;font-size:3.5rem;z-index:31;pointer-events:none;transform:translate(-50%,-50%)}
+.scene{position:relative;height:150px;background:linear-gradient(#2a1220,#3a1a2a);border-radius:12px;overflow:hidden;border-bottom:8px solid #6b3d1e;margin:10px 0}.door{position:absolute;right:4px;bottom:0;font-size:4.5rem;line-height:1}.dr{position:absolute;left:0;bottom:6px;font-size:3rem;line-height:1;white-space:nowrap}.hic{position:absolute;font-size:1rem;color:#f5e9d3;pointer-events:none;font-weight:bold;white-space:nowrap}
+@keyframes pop{from{transform:scale(.6) rotate(-4deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes hop{0%,100%{transform:none}40%{transform:translateY(-14px) scale(1.3)}}
+</style>
+</head>
+<body>
+<header><h1>🍸 BAR U MATURANTA</h1><div class="sub" id="sub">BIM – projektování · maturita 2027 · 2 týmy</div></header>
+<div class="teams">
+<div class="team a" id="t0"><div class="av" id="av0"></div><div class="nm" id="n0">Tým A</div><div class="sc" id="s0">0</div><div class="st" id="st0"></div><div class="tr" id="tr0"></div></div>
+<div class="team b" id="t1"><div class="av" id="av1"></div><div class="nm" id="n1">Tým B</div><div class="sc" id="s1">0</div><div class="st" id="st1"></div><div class="tr" id="tr1"></div></div>
+</div>
+<div class="barman">
+<svg viewBox="0 0 110 150" aria-hidden="true"><circle cx="55" cy="34" r="22" fill="#f1c9a0"/><path d="M33 28q22-26 44 0q-6-10-22-10t-22 10z" fill="#2b1a10"/><circle cx="47" cy="34" r="2.5" fill="#222"/><circle cx="63" cy="34" r="2.5" fill="#222"/><path d="M45 44q10 8 20 0" stroke="#222" stroke-width="2" fill="none"/><path d="M46 40q9-4 18 0q-3 5-9 4t-9-4z" fill="#2b1a10"/><rect x="48" y="55" width="14" height="10" fill="#f1c9a0"/><path d="M20 150v-62q0-22 35-22t35 22v62z" fill="#fff"/><path d="M55 66l-9 10 9 12 9-12z" fill="#111"/><path d="M47 76l8 6 8-6" fill="#8b1a2b"/><rect x="38" y="95" width="34" height="55" fill="#222" rx="3"/></svg>
+<div class="bubble" id="bubble"></div>
+</div>
+<div class="counter"><div class="grid" id="grid"></div>
+<div class="foot"><div id="count" style="margin-bottom:10px;opacity:.8"></div><button class="btn ghost" id="reset">🔄 Zavřít bar a začít znovu</button></div></div>
+
+<div class="ov" id="ov"><div class="coaster">
+<small>Tvůj drink</small><div class="dn" id="dn"></div><div class="gl" id="gl"></div>
+<div class="roles"><div class="role" id="r0">🎤 Odpovídá<b id="ra"></b></div><div class="role" id="r1">⚖️ Posuzuje<b id="rj"></b></div></div>
+<small>Otázka k maturitě</small><div class="q" id="q"></div>
+<small style="margin-bottom:8px" id="ask"></small>
+<div class="judge"><button class="btn ok" id="yes">✅ Správně</button><button class="btn no" id="no">❌ Špatně</button></div>
+</div></div>
+
+<div class="ov on" id="setup"><div class="coaster">
+<div class="dn">Vyberte si bar, jména a postavičky</div><small>Který bar navštívíte?</small><div class="bars" id="bars"></div>
+<input class="ni" id="ni0" value="Tým A" maxlength="14" style="--c:#3aa0e8" aria-label="Název týmu A"><div class="pk" id="pk0" style="--c:#3aa0e8"></div>
+<input class="ni" id="ni1" value="Tým B" maxlength="14" style="--c:#e8553a" aria-label="Název týmu B"><div class="pk" id="pk1" style="--c:#e8553a"></div>
+<button class="btn" id="go">Otevřít bar 🍹</button></div></div>
+<div class="ov" id="fin"><div class="coaster"><div class="dn" id="ft"></div><div class="scene" id="sc"><div class="door">🚪</div></div><div id="fs" style="font-weight:bold;margin-bottom:10px"></div><div class="judge" id="fb" style="visibility:hidden"><button class="btn" id="again">🔄 Hrát znovu</button><button class="btn" id="back" style="background:#8a5a30">Zpět k baru</button></div></div></div>
+<script>
+var BIMQ=["Význam metody BIM, situace v ČR a zahraničí, legislativa","Typy a výměna informací, standardizace ve stavebnictví","Digitální dvojče stavby (DT), aspekty informačního modelování","Role metody BIM, činnosti a náplň manažera BIM a koordinátora BIM","Metoda BIM jako pracovní proces, OpenBIM","Základy Informačního modelu stavby (IMS) a Digitálního modelu stavby (DiMS)","Otevřený standardizovaný formát IFC","Management informací o stavbě ve Společném datovém prostředí (CDE)","Využití metody BIM v praxi, vytěžování informací z DiMS","Základní struktura a náplň FM","Standardy pracoviště, požadavky a vazby","FM a plán oživení (zprovoznění) budovy","Pravidla běžného provozu a údržby","Řízení správy, kontroly a údržby","Trvale udržitelný rozvoj budovy","Bezpečnost a rizika při užívání staveb","Řízení FM s využitím BIM","Základní pojmy Stavebního zákona, účastníci stavebního procesu","Složení nákladů na pořízení stavby, smluvní vztahy, DPH","Tvorba ceny stavebního díla, druhy rozpočtů"];
+var SUBJ=[{name:"BIM – projektování",icon:"🏗️",q:BIMQ},
+{name:"Stavby a konstrukce",icon:"🧱",q:["Geologie","Kamenivo, voda pro betonovou směs","Cementy pro betonovou směs","Betonová směs","Beton","Ocel","Železobetonové desky prostě uložené, vetknuté","Železobetonové desky spojité","Železobetonové desky křížem vyztužené","Železobetonové trámy prostě uložené, vetknuté","Železobetonové trámy spojité","Prvky ocelových konstrukcí","Ocelové stavby","Prostý a slabě vyztužený beton","Předpjatý beton","Opěrné stěny","Prvky dřevěných konstrukcí","Dřevěné stavby","Dřevo","Základní veličiny ve výpočtech"]},
+{name:"Geodézie",icon:"📐",q:["Obsah katastru nemovitostí a právní předpisy","Tvorba map","Výšková bodová pole","Polohové bodové pole","Zeměměřické činnosti pro účely katastru","Podrobné měření polohopisu (polohopisné mapování)","Podrobné měření výškopisu (výškopisné mapování)","Mapovací práce na našem území","Mapování z hlediska kartografie","Určování vodorovných směrů a úhlů","Základní pojmy měření svislých úhlů","Určování výšek","Nivelace","Nivelační přístroje a pomůcky","Teodolit","Protínání vpřed, rajón","Volné stanovisko","Měření vzdáleností","Trigonometrické určování výšek","Vytyčovací práce ve stavebnictví"]}],Q=BIMQ,sel=0;
+var N=["Mojito","Cosmopolitan","Blue Lagoon","Margarita","Aperol Spritz","Piña Colada","Negroni","Tequila Sunrise","Old Fashioned","Espresso Martini","Cuba Libre","Moscow Mule","Daiquiri","Bellini","Gin Tonic","Mai Tai","Sex on the Beach","Whisky Sour","Caipirinha","Long Island"];
+var C=["#7fd67a","#e0457b","#2ea8e8","#c8e04a","#ff7a2e","#f6efc2","#c2223a","#ff9a2e","#b9702a","#3a2216","#6b3b1b","#e7d77a","#d8f0a0","#ffc59a","#bfe8f0","#f08a3a","#ff5e5e","#e8b04a","#a6d65a","#9c6a3a"];
+var CH=["🤠","🧙","🥷","🤖","👽","🦸","🧛","🐱","🦊","🐸","🐼","🦄","🐵","🐷","🦖","🐙","🎅","🧜"];
+function glass(t,c){c=c||"none";var s='<svg viewBox="0 0 60 80">';
+if(t==0)s+='<path d="M6 8h48L30 40z" fill="#ffffff22" stroke="#fff" stroke-width="2"/><path d="M12 13h36L30 36z" fill="'+c+'"/><path d="M30 40v32M18 74h24" stroke="#fff" stroke-width="3"/>';
+else if(t==1)s+='<path d="M14 6h32l-3 68H17z" fill="#ffffff22" stroke="#fff" stroke-width="2"/><path d="M16 22h28l-2 50H18z" fill="'+c+'"/>';
+else if(t==2)s+='<path d="M10 28h40l-3 44H13z" fill="#ffffff22" stroke="#fff" stroke-width="2"/><path d="M12 38h36l-2 32H14z" fill="'+c+'"/>';
+else s+='<path d="M8 10q22 30 44 0z" fill="#ffffff22" stroke="#fff" stroke-width="2"/><path d="M13 12q17 20 34 0z" fill="'+c+'"/><path d="M30 34v36M18 74h24" stroke="#fff" stroke-width="3"/>';
+return s+'</svg>'}
+function sh(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+var $=function(i){return document.getElementById(i)},drinks,used,turn,score,cur,busy,tro,who=[0,1],COL=["#3aa0e8","#e8553a"];
+function nm(i){return $("n"+i).textContent}
+function bub(t){$("bubble").textContent=t}
+function show(){for(var i=0;i<2;i++){$("s"+i).textContent=score[i];$("t"+i).classList.toggle("on",i==turn);$("st"+i).textContent=i==turn?"🎤 na řadě":"";$("av"+i).textContent=CH[who[i]];$("tr"+i).innerHTML=tro[i].map(function(x){return glass(x.t,null)}).join("")}}
+function bars(){$("bars").innerHTML="";SUBJ.forEach(function(x,k){var b=document.createElement("button");b.className=k==sel?"sel":"";b.textContent=x.icon+" "+x.name+" ("+x.q.length+" drinků)";b.onclick=function(){sel=k;Q=x.q;bars()};$("bars").appendChild(b)})}
+function picks(){bars();for(let i=0;i<2;i++){$("pk"+i).innerHTML="";CH.forEach(function(e,k){var b=document.createElement("button");b.textContent=e;b.className=(who[i]==k?"sel":"")+(who[1-i]==k?" tk":"");b.onclick=function(){if(who[1-i]!=k){who[i]=k;picks()}};$("pk"+i).appendChild(b)})}}
+function init(){$("sub").textContent=SUBJ[sel].icon+" "+SUBJ[sel].name+" · maturita 2027 · 2 týmy";var qs=sh(Q.slice());drinks=N.slice(0,Q.length).map(function(n,i){return{n:n,c:C[i],t:i%4,q:qs[i],u:false}});used=0;score=[0,0];tro=[[],[]];busy=false;turn=Math.random()<.5?0:1;draw();show();bub("Vítejte v baru! Tým na řadě si vybere drink a odpoví. Správná odpověď = drink vypijete a sklenici si necháte, špatná = sklenice se rozbije! 🍹")}
+function draw(){$("grid").innerHTML="";drinks.forEach(function(d,i){var b=document.createElement("button");b.className="drink"+(d.u?" used":"");b.setAttribute("aria-label",d.n);b.innerHTML=glass(d.t,d.c)+"<span>"+d.n+"</span>";b.onclick=function(){if(!busy)pick(i)};$("grid").appendChild(b)});$("count").textContent="Zbývá drinků: "+(drinks.length-used)+" z "+drinks.length}
+function pick(i){var d=drinks[i];d.u=true;used++;cur=d;var j=1-turn;
+$("dn").textContent=d.n;$("gl").innerHTML=glass(d.t,d.c);$("q").textContent="„"+d.q+"“";
+$("ra").textContent=CH[who[turn]]+" "+nm(turn);$("rj").textContent=CH[who[j]]+" "+nm(j);$("r0").style.background=COL[turn];$("r1").style.background=COL[j];
+$("ask").textContent="Posuzuje "+nm(j)+": odpověděl "+nm(turn)+" správně?";
+$("ov").classList.add("on");draw()}
+function fly(html){var f=document.createElement("div");f.className="fly";f.innerHTML=html;document.body.appendChild(f);return f}
+function judge(ok){var t=turn,d=cur;busy=true;$("ov").classList.remove("on");
+var f=fly(glass(d.t,d.c));
+if(ok){bub("Správně! "+CH[who[t]]+" "+nm(t)+" si bere drink a pije… glug glug! 🥴");
+var r=$("av"+t).getBoundingClientRect(),dx=r.left+r.width/2-innerWidth/2,dy=r.top+r.height/2-innerHeight*.38;
+setTimeout(function(){f.innerHTML=glass(d.t,null)},800);
+f.animate([{transform:"translate(-50%,-50%) scale(1.6)"},{transform:"translate(calc(-50% + "+dx*.6+"px),calc(-50% + "+dy*.6+"px)) rotate(-100deg) scale(1.1)",offset:.45},{transform:"translate(calc(-50% + "+dx*.6+"px),calc(-50% + "+dy*.6+"px)) rotate(-100deg) scale(1.1)",offset:.6},{transform:"translate(calc(-50% + "+dx+"px),calc(-50% + "+dy+"px)) rotate(0) scale(.35)",opacity:.9}],{duration:1800,easing:"ease-in-out"}).onfinish=function(){f.remove();score[t]++;tro[t].push({t:d.t});show();$("av"+t).style.animation="hop .6s";setTimeout(function(){$("av"+t).style.animation="";next(t,ok)},650)}}
+else{bub("Špatně! Cink… sklenice se rozbila! 💥");
+f.animate([{transform:"translate(-50%,-50%) scale(1.6) rotate(0)"},{transform:"translate(-50%,-50%) scale(1.6) rotate(-14deg)"},{transform:"translate(-50%,-50%) scale(1.6) rotate(12deg)"},{transform:"translate(-50%,-50%) scale(1.6) rotate(-8deg)"},{transform:"translate(-50%,-30%) scale(1.6) rotate(0)"}],{duration:650}).onfinish=function(){f.remove();var b=document.createElement("div");b.className="boom";b.textContent="💥";document.body.appendChild(b);b.animate([{transform:"translate(-50%,-50%) scale(.4)",opacity:1},{transform:"translate(-50%,-50%) scale(1.6)",opacity:0}],{duration:600}).onfinish=function(){b.remove()};
+for(var k=0;k<14;k++){var s=document.createElement("div");s.className="shard";s.style.background=d.c;s.style.left=(innerWidth/2-8)+"px";s.style.top=(innerHeight*.38-8)+"px";document.body.appendChild(s);var a=Math.random()*6.28,dist=70+Math.random()*110;
+(function(s,a,dist){s.animate([{transform:"translate(0,0) rotate(0)",opacity:1},{transform:"translate("+Math.cos(a)*dist+"px,"+(Math.sin(a)*dist+120)+"px) rotate("+(Math.random()*720)+"deg)",opacity:0}],{duration:1100,easing:"ease-out"}).onfinish=function(){s.remove()}})(s,a,dist)}
+setTimeout(function(){next(t,ok)},1100)}}}
+function next(t,ok){busy=false;turn=1-t;show();
+if(used==drinks.length){var w=score[0]==score[1]?"Remíza! 🤝":"Vyhrává "+CH[who[score[0]>score[1]?0:1]]+" "+nm(score[0]>score[1]?0:1)+"! 🏆";bub("Bar zavírá! Skóre "+score[0]+":"+score[1]+". "+w);setTimeout(finale,1200)}
+else bub((ok?"Bod pro "+nm(t)+"! 🎉":"Bez bodu, příště to vyjde. 🙈")+" Teď je na řadě "+CH[who[turn]]+" "+nm(turn)+".")}
+function finale(){var win=score[0]==score[1]?[0,1]:[score[0]>score[1]?0:1],sc=$("sc");
+$("ft").textContent=win.length>1?"Remíza – odchází oba! 🤝":"Vyhrává "+nm(win[0])+" "+CH[who[win[0]]]+" 🏆";
+$("fs").textContent="Skóre "+score[0]+":"+score[1];$("fb").style.visibility="hidden";
+sc.querySelectorAll(".dr,.hic").forEach(function(e){e.remove()});$("fin").classList.add("on");
+var W=Math.max(sc.clientWidth-120,100),words=["škyt!","🍺","🥴","Ještě jednu!","Nalij!","🎶"];
+var iv=setInterval(function(){var h=document.createElement("div");h.className="hic";h.textContent=words[Math.floor(Math.random()*words.length)];h.style.left=(10+Math.random()*(W-20))+"px";h.style.bottom="70px";sc.appendChild(h);h.animate([{transform:"translateY(0)",opacity:1},{transform:"translateY(-50px)",opacity:0}],{duration:1200}).onfinish=function(){h.remove()}},500);
+win.forEach(function(w,idx){var e=document.createElement("div");e.className="dr";e.textContent=CH[who[w]]+"🍺";sc.appendChild(e);
+var fr=[],n=26;for(var k=0;k<n;k++){var fall=(k==15||k==16)?85:0;fr.push({transform:"translateX("+(W*k/n)+"px) translateY("+(fall?0:-Math.random()*12)+"px) rotate("+(fall||(Math.random()*50-25))+"deg)",offset:k/n})}
+fr.push({transform:"translateX("+(W+30)+"px) scale(.2)",opacity:0,offset:1});
+e.animate(fr,{duration:8000,delay:idx*500,fill:"forwards"}).onfinish=function(){if(idx==win.length-1){clearInterval(iv);$("fb").style.visibility="visible"}}})}
+$("again").onclick=function(){$("fin").classList.remove("on");window._fresh=1;picks();$("setup").classList.add("on")};
+$("back").onclick=function(){$("fin").classList.remove("on")};
+$("yes").onclick=function(){judge(true)};$("no").onclick=function(){judge(false)};
+$("reset").onclick=function(){picks();$("setup").classList.add("on")};
+$("go").onclick=function(){$("n0").textContent=$("ni0").value.trim()||"Tým A";$("n1").textContent=$("ni1").value.trim()||"Tým B";$("setup").classList.remove("on");init()};
+picks();
+</script>
+</body>
+</html>
